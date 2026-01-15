@@ -1,4 +1,7 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import datetime as dt
+from datetime import datetime
 
 def main():
     while True:
@@ -45,10 +48,31 @@ def vpdData():
 def getData():
     """Reads in the data from the file"""
     df = pd.read_csv("Data\Meter1_data.csv")
+        #rename columns Need to be aware of units
+    df = df.rename(columns={'Temperature_Celsius(°C)': 'Temp', 'Relative_Humidity(%)': 'RH','Absolute_Humidity(g/m³)':'AH', 'DPT_Celsius(°C)':'Dewpoint','VPD(kPa)':'VPD'})
+    #convert the Timestamp to seperate date time columns
+    df['Timestamp'] = pd.to_datetime(df['Timestamp'])
+    print(f'Dataframe for Meter 1 in use')
+    print(df.info())
     return df
 
-def averageTemp(dfData):
-    pass
+def averageTemp(dfData):   
+    lastDay = (dfData.Timestamp.max())
+    lastDay = lastDay.date()
+    firstDay = (dfData.Timestamp.min())   
+    firstDay = firstDay.date()
+    print (f"Showing Data in the following Range:{firstDay} - {lastDay}")
+    lastDay = lastDay + dt.timedelta(days=1)  #need to go one day further for the mask
+    mask = (dfData.Timestamp >= pd.Timestamp(firstDay)) & (dfData.Timestamp < pd.Timestamp(lastDay))
+    dfday = dfData.loc[mask, ['Timestamp','Temp','VPD']]
+    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["Temp"].mean()
+    print("Mean value of Temperature for each Day")
+    print(dfdaydata)
+    dfdaydata.plot(kind = 'bar')
+    plt.suptitle(f"Mean Temperature each Hour of Day ")
+    plt.xlabel("Day ")
+    plt.ylabel("Degree C")
+    plt.show()
 
 def maxTemp(dfData):
     pass
