@@ -44,6 +44,27 @@ def tempData():
 def vpdData():
     dfData = getData()
     print (dfData)
+    while True:
+        print(" VPD Summary Menu")
+        print("1. Daily Average")
+        print("2. Daily Minimum")
+        print("3. Daily Maximum")
+        print("4. Daily Median")
+        print("5. Return to Main Menu")
+        choice = input("Enter Choice:")
+        if choice == "1":
+            averageVpd(dfData)
+        elif choice == "2":
+            minVpd(dfData)
+        elif choice == "3":
+            maxVpd(dfData)
+        elif choice == "4":
+            medianVpd(dfData)
+        elif choice == "5":
+            break
+        else:
+            print ("\n\tInvlaid Choice\n")
+
 
 def getData():
     """Reads in the data from the file"""
@@ -69,7 +90,7 @@ def averageTemp(dfData):
     print("Mean value of Temperature for each Day")
     print(dfdaydata)
     dfdaydata.plot(kind = 'bar')
-    plt.suptitle(f"Mean Temperature each Hour of Day ")
+    plt.suptitle(f"Mean Temperature Day ")
     plt.xlabel("Day ")
     plt.ylabel("Degree C")
     plt.show()
@@ -110,6 +131,77 @@ def minTemp(dfData):
     plt.ylabel("Degree C")
     plt.show()
 
+def averageVpd(dfData):
+    lastDay = (dfData.Timestamp.max())
+    lastDay = lastDay.date()
+    firstDay = (dfData.Timestamp.min())   
+    firstDay = firstDay.date()
+    print (f"Showing Data in the following Range:{firstDay} - {lastDay}")
+    lastDay = lastDay + dt.timedelta(days=1)  #need to go one day further for the mask
+    mask = (dfData.Timestamp >= pd.Timestamp(firstDay)) & (dfData.Timestamp < pd.Timestamp(lastDay))
+    dfday = dfData.loc[mask, ['Timestamp','Temp','VPD']]
+    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].mean()
+    print("Mean value of VPD for each Day")
+    print(dfdaydata)
+    dfdaydata.plot(kind = 'bar')
+    plt.suptitle(f"Mean VPD each  Day ")
+    plt.xlabel("Day ")
+    plt.ylabel("kPa")
+    plt.show()
+
+def minVpd(dfData):
+    lastDay = (dfData.Timestamp.max())
+    lastDay = lastDay.date()
+    firstDay = (dfData.Timestamp.min())   
+    firstDay = firstDay.date()
+    print (f"Showing Data in the following Range:{firstDay} - {lastDay}")
+    lastDay = lastDay + dt.timedelta(days=1)  #need to go one day further for the mask
+    mask = (dfData.Timestamp >= pd.Timestamp(firstDay)) & (dfData.Timestamp < pd.Timestamp(lastDay))
+    dfday = dfData.loc[mask, ['Timestamp','Temp','VPD']]
+    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].max()
+    print("Max value of VPD for each Day")
+    print(dfdaydata)
+    dfdaydata.plot(kind = 'bar')
+    plt.suptitle(f"Max VPD each  Day ")
+    plt.xlabel("Day ")
+    plt.ylabel("kPa")
+    plt.show()
+
+def maxVpd(dfData):
+    lastDay = (dfData.Timestamp.max())
+    lastDay = lastDay.date()
+    firstDay = (dfData.Timestamp.min())   
+    firstDay = firstDay.date()
+    print (f"Showing Data in the following Range:{firstDay} - {lastDay}")
+    lastDay = lastDay + dt.timedelta(days=1)  #need to go one day further for the mask
+    mask = (dfData.Timestamp >= pd.Timestamp(firstDay)) & (dfData.Timestamp < pd.Timestamp(lastDay))
+    dfday = dfData.loc[mask, ['Timestamp','Temp','VPD']]
+    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].min()
+    print("Min value of VPD for each Day")
+    print(dfdaydata)
+    dfdaydata.plot(kind = 'bar')
+    plt.suptitle(f"Min VPD each  Day ")
+    plt.xlabel("Day ")
+    plt.ylabel("kPa")
+    plt.show()
+
+def medianVpd(dfData):
+    lastDay = (dfData.Timestamp.max())
+    lastDay = lastDay.date()
+    firstDay = (dfData.Timestamp.min())   
+    firstDay = firstDay.date()
+    print (f"Showing Data in the following Range:{firstDay} - {lastDay}")
+    lastDay = lastDay + dt.timedelta(days=1)  #need to go one day further for the mask
+    mask = (dfData.Timestamp >= pd.Timestamp(firstDay)) & (dfData.Timestamp < pd.Timestamp(lastDay))
+    dfday = dfData.loc[mask, ['Timestamp','Temp','VPD']]
+    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].median()
+    print("Median value of VPD for each Day")
+    print(dfdaydata)
+    dfdaydata.plot(kind = 'bar')
+    plt.suptitle(f"Median VPD each  Day ")
+    plt.xlabel("Day ")
+    plt.ylabel("kPa")
+    plt.show()
 
 
 
