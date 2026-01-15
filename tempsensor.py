@@ -158,7 +158,7 @@ def minVpd(dfData):
     lastDay = lastDay + dt.timedelta(days=1)  #need to go one day further for the mask
     mask = (dfData.Timestamp >= pd.Timestamp(firstDay)) & (dfData.Timestamp < pd.Timestamp(lastDay))
     dfday = dfData.loc[mask, ['Timestamp','Temp','VPD']]
-    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].max()
+    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].min()
     print("Max value of VPD for each Day")
     print(dfdaydata)
     dfdaydata.plot(kind = 'bar')
@@ -176,7 +176,7 @@ def maxVpd(dfData):
     lastDay = lastDay + dt.timedelta(days=1)  #need to go one day further for the mask
     mask = (dfData.Timestamp >= pd.Timestamp(firstDay)) & (dfData.Timestamp < pd.Timestamp(lastDay))
     dfday = dfData.loc[mask, ['Timestamp','Temp','VPD']]
-    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].min()
+    dfdaydata = dfday.groupby([dfday['Timestamp'].dt.day])["VPD"].max()
     print("Min value of VPD for each Day")
     print(dfdaydata)
     dfdaydata.plot(kind = 'bar')
